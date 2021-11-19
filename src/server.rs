@@ -17,7 +17,14 @@ impl Server {
 
 		println!("Listening on {}", self.address);
 
-		loop {}
+		loop {
+			match listener.accept() {
+				Ok((_stream, address)) => {
+					println!("Connection received from {}", address);
+				},
+				Err(e) => continue
+			}
+		}
 	}
 
 }
