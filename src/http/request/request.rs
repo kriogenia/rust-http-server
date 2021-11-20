@@ -1,4 +1,5 @@
-use super::method::Method;
+use super::ParsingError;
+use crate::http::Method;
 use std::convert::TryFrom;
 
 pub struct Request {
@@ -8,9 +9,9 @@ pub struct Request {
 }
 
 impl TryFrom<&[u8]> for Request {
-	type Error = String;
+	type Error = ParsingError;
 
 	fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-		return Err("Not implemented".to_string());
+		return Err(ParsingError::InvalidRequest);
 	}
 }
