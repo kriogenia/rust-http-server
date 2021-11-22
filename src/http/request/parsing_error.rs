@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult, write};
+use std::str::Utf8Error;
 
 pub enum ParsingError {
 	InvalidRequest,
@@ -19,6 +20,8 @@ impl ParsingError {
 	}
 }
 
+/** Error interface **/
+
 impl Display for ParsingError {
 	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
 		write!(f, "{}", self.message())
@@ -32,3 +35,11 @@ impl Debug for ParsingError {
 }
 
 impl Error for ParsingError {}
+
+/** Error conversions **/
+
+impl From<Utf8Error> for ParsingError {
+	fn from(_: Utf8Error) -> Self {
+		ParsingError::InvalidEncoding
+	}
+}

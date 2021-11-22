@@ -1,6 +1,8 @@
 use super::ParsingError;
 use crate::http::Method;
 use std::convert::TryFrom;
+use std::str;
+use crate::http::request::ParsingError::InvalidEncoding;
 
 pub struct Request {
 	path: String,
@@ -12,6 +14,8 @@ impl TryFrom<&[u8]> for Request {
 	type Error = ParsingError;
 
 	fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-		return Err(ParsingError::InvalidRequest);
+		let request = str::from_utf8(value)?;
+
 	}
+
 }
