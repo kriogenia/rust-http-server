@@ -1,5 +1,5 @@
 pub use request::Request;
-pub use method::Method;
+pub use methods::Method;
 
-pub mod method;
+pub mod methods;
 pub mod request;

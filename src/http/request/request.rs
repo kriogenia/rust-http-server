@@ -23,7 +23,8 @@ impl TryFrom<&[u8]> for Request {
 			return Err(ParsingError::InvalidProtocol);
 		}
 
-		println!("Method: {}", method);
+		let method: Method = method.parse()?;
+
 		println!("Path: {}", path);
 		println!("Protocol: {}", protocol);
 
