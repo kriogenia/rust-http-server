@@ -4,18 +4,18 @@ use std::convert::TryFrom;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::str;
 
-pub struct Request {
-	path: String,
-	query: Option<String>,
+pub struct Request<'buf> {
+	path: &'buf str,
+	query: Option<&'buf str>,
 	method: Method,
 }
 
 /** Parsing **/
 
-impl TryFrom<&[u8]> for Request {
+impl<'buf> TryFrom<&'buf [u8]> for Request<'buf> {
 	type Error = ParsingError;
 
-	fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+	fn try_from(value: &'buf [u8]) -> Result<Self, Self::Error> {
 		let request = str::from_utf8(value)?;
 
 		let (method, request) = get_next_word(request).ok_or(ParsingError::InvalidRequest)?;
@@ -30,17 +30,13 @@ impl TryFrom<&[u8]> for Request {
 		let method: Method = method.parse()?;
 		let (path, query) = read_reference(reference);
 
-		Ok(Self {
-			path: path.to_string(),
-			query: query.and_then(|q| Option::from(q.to_string())),
-			method,
-		})
+		Ok(Self { path, query, method })
 	}
 }
 
 /** Printing */
 
-impl Display for Request {
+impl<'buf> Display for Request<'buf> {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult {
 		let query = if self.query.is_some() { self.query.as_ref().unwrap() } else { "-" };
 		write!(f,
