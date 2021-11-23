@@ -23,7 +23,7 @@ impl Server {
 		loop {
 			match listener.accept() {
 				Ok(request) => handle_request(request),
-				Err(e) => continue
+				Err(_) => continue
 			}
 		}
 	}
