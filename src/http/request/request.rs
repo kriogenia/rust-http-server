@@ -30,11 +30,11 @@ impl TryFrom<&[u8]> for Request {
 		let method: Method = method.parse()?;
 		let (path, query) = read_reference(reference);
 
-		println!("Path: {}", path);
-		if query.is_some() { println!("Query: {}", query.unwrap()); }
-		println!("Protocol: {}", protocol);
-
-		unimplemented!()
+		Ok(Self {
+			path: path.to_string(),
+			query: query.and_then(|q| Option::from(q.to_string())),
+			method,
+		})
 	}
 }
 
@@ -44,9 +44,9 @@ impl Display for Request {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult {
 		let query = if self.query.is_some() { self.query.as_ref().unwrap() } else { "-" };
 		write!(f,
-		       "REQUEST:\
-		       Path: {}\
-		       Query: {}",
+		       "REQUEST:\n\
+		       \tPath: {}\n\
+		       \tQuery: {}",
 		       self.path, query)
 	}
 }

@@ -37,7 +37,7 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr)) {
 		Ok(size) => {
 			println!("Received a request: {}", String::from_utf8_lossy(&buffer[..size]));
 			match Request::try_from(&buffer as &[u8]) {
-				Ok(request) => println!("{}", request),
+				Ok(request) => println!("Request parsed\n{}", request),
 				Err(e) => println!("Error converting byte array: {}", e)
 			}
 		}
