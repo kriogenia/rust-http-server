@@ -1,4 +1,4 @@
-use super::ParsingError;
+use super::{ParsingError, QueryMap};
 use crate::http::Method;
 use std::convert::TryFrom;
 use std::fmt::{Display, Formatter, Result as FmtResult};
@@ -6,7 +6,7 @@ use std::str;
 
 pub struct Request<'buf> {
 	path: &'buf str,
-	query: Option<&'buf str>,
+	query: Option<QueryMap<'buf>>,
 	method: Method,
 }
 
@@ -38,12 +38,10 @@ impl<'buf> TryFrom<&'buf [u8]> for Request<'buf> {
 
 impl<'buf> Display for Request<'buf> {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult {
-		let query = if self.query.is_some() { self.query.as_ref().unwrap() } else { "-" };
-		write!(f,
-		       "REQUEST:\n\
-		       \tPath: {}\n\
-		       \tQuery: {}",
-		       self.path, query)
+		match self.query.as_ref() {
+			Some(q) => write!(f, "REQUEST:\n\tPath: {}\n\tQuery: {}",self.path, q),
+			None => write!(f, "REQUEST:\n\tPath: {}\n",self.path)
+		}
 	}
 }
 
@@ -58,9 +56,9 @@ fn get_next_word(request: &str) -> Option<(&str, &str)> {
 	return None;
 }
 
-fn read_reference(reference: &str) -> (&str, Option<&str>) {
+fn read_reference(reference: &str) -> (&str, Option<QueryMap>) {
 	match reference.find('?') {
-		Some(i) => (&reference[..i], Some(&reference[i + 1..])),
+		Some(i) => (&reference[..i], Some(QueryMap::from(&reference[i + 1..]))),
 		None => (&reference, None)
 	}
 }
