@@ -4,6 +4,7 @@ use std::convert::TryFrom;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::str;
 
+#[derive(Debug)]
 pub struct Request<'buf> {
 	path: &'buf str,
 	query: Option<QueryMap<'buf>>,
@@ -31,17 +32,6 @@ impl<'buf> TryFrom<&'buf [u8]> for Request<'buf> {
 		let (path, query) = read_reference(reference);
 
 		Ok(Self { path, query, method })
-	}
-}
-
-/** Printing */
-
-impl<'buf> Display for Request<'buf> {
-	fn fmt(&self, f: &mut Formatter) -> FmtResult {
-		match self.query.as_ref() {
-			Some(q) => write!(f, "REQUEST:\n\tPath: {}\n\tQuery: {}",self.path, q),
-			None => write!(f, "REQUEST:\n\tPath: {}\n",self.path)
-		}
 	}
 }
 

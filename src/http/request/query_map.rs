@@ -1,10 +1,12 @@
 use std::collections::{HashMap};
 use std::fmt::{Display, Formatter};
 
+#[derive(Debug)]
 pub struct QueryMap<'buf> {
 	data: HashMap<&'buf str, Value<'buf>>,
 }
 
+#[derive(Debug)]
 pub enum Value<'buf> {
 	Boolean(bool),
 	Single(&'buf str),
@@ -53,12 +55,5 @@ impl<'buf> From<&'buf str> for QueryMap<'buf> {
 		}
 
 		query
-	}
-}
-
-/** Printing */
-impl<'buf> Display for QueryMap<'buf> {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{}", self.data.keys().map(|k| k.to_string()).collect::<String>())
 	}
 }
