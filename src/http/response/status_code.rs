@@ -1,21 +1,22 @@
-use std::fmt::{Display, Formatter, write};
-use std::str::FromStr;
+use std::fmt::{Display, Formatter};
 
 #[derive(Copy, Clone, Debug)]
 pub enum StatusCode {
 	Ok = 200,
 	BadRequest = 400,
 	NotFound = 404,
+	RequestTimeout = 408,
 	InternalServerError = 500
 }
 
 impl StatusCode {
 	pub fn to_string(&self) -> &str {
 		match self {
-			Self::Ok => "OK",
-			Self::BadRequest => "BAD REQUEST",
-			Self::NotFound => "NOT FOUND",
-			Self::InternalServerError => "INTERNAL SERVER ERROR"
+			Self::Ok => "Ok",
+			Self::BadRequest => "Bad Request",
+			Self::NotFound => "Not Found",
+			Self::RequestTimeout => "Request Timeout",
+			Self::InternalServerError => "Internal Server Error"
 		}
 	}
 }

@@ -1,5 +1,4 @@
 use std::collections::{HashMap};
-use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub struct QueryMap<'buf> {

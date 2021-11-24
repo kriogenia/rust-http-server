@@ -1,7 +1,6 @@
 use super::{ParsingError, QueryMap};
 use crate::http::Method;
 use std::convert::TryFrom;
-use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::str;
 
 #[derive(Debug)]
