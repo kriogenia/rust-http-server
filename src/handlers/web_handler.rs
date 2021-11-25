@@ -1,58 +1,40 @@
+use crate::fs::FileReader;
 use super::Handler;
 use crate::http::{Method, Request, Response, StatusCode};
-use std::fs;
 
-pub struct WebHandler {
-	public_path: String
+pub struct WebHandler<'fr> {
+	fs: &'fr FileReader<'fr>
 }
 
-impl WebHandler {
-	pub fn new(public_path: String) -> Self {
-		WebHandler { public_path }
+impl<'fr> WebHandler<'fr> {
+	pub fn new(fs: &'fr FileReader) -> Self {
+		WebHandler { fs }
 	}
 
-	fn read_file(&self, file_path: &str) -> Option<String> {
-		let path = format!("{}/{}", self.public_path, file_path);
-		match fs::canonicalize(path) {
-			Ok(path) => {
-				if path.starts_with(&self.public_path) {
-					fs::read_to_string(path).ok()
-				} else {
-					eprintln!("Directory Traversal Attack attempted: {}", file_path);
-					None
-				}
-			},
-			Err(_) => None
-		}
-	}
-
-	fn get_router(&self, path: &str) -> Response {
+	fn get_router(&self, path: &str) -> Option<Response> {
 		match path {
-			"/" => ok_response(self.read_file("index.html")),
-			"/hello" => ok_response(self.read_file("html/helloworld.txt")),
-			_ => match self.read_file(path) {
-				Some(s) => ok_response(Some(s)),
-				None => not_found_response(self.read_file("404.html"))
-			}
+			"/" => ok_response(self.fs.read_file("index.html")),
+			"/hello" => ok_response(self.fs.read_file("helloworld.txt")),
+			_ => self.fs.read_file(path).and_then(|s| ok_response(Some(s)))
 		}
 	}
 
-
 }
 
-impl Handler for WebHandler {
-	fn handle_request(&mut self, request: &Request) -> Response {
+impl<'fr> Handler for WebHandler<'fr> {
+	fn handle_request(&mut self, request: &Request) -> Option<Response> {
 		println!("> {:?}", request);
 
 		match request.method() {
 			Method::GET => self.get_router(request.path()),
-			_ => not_found_response(self.read_file("404.html"))
+			_ => None
+			//_ => not_found_response(self.read_file("404.html"))
 		}
 	}
 }
 
-fn ok_response(content: Option<String>) -> Response {
-	Response::new(StatusCode::Ok, content)
+fn ok_response(content: Option<String>) -> Option<Response> {
+	Some(Response::new(StatusCode::Ok, content))
 }
 
 fn not_found_response(content: Option<String>) -> Response {

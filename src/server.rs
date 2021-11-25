@@ -1,7 +1,7 @@
 use std::io::{Read};
 use std::net::{SocketAddr, TcpListener, TcpStream};
 use crate::handlers::Handler;
-use crate::http::{HttpError, Request};
+use crate::http::{HttpError, Request, Response, StatusCode};
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -39,7 +39,8 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut 
 			println!("> Received a request: {}", String::from_utf8_lossy(&buffer[..size]));
 			match Request::try_from(&buffer as &[u8]) {
 				Ok(request) => {
-					handler.handle_request(&request)
+					handler.handle_request(&request).unwrap_or(
+						Response::new(StatusCode::NotFound, None))
 				}
 				Err(e) => {
 					handler.handle_bad_request(HttpError::from(e))
