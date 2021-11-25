@@ -1,11 +1,19 @@
 use super::Handler;
 use crate::http::{Method, Request, Response, StatusCode};
 
-pub struct WebHandler {}
+pub struct WebHandler {
+	public_path: String
+}
+
+impl WebHandler {
+	pub fn new(public_path: String) -> Self {
+		WebHandler { public_path }
+	}
+}
 
 impl Handler for WebHandler {
 	fn handle_request(&mut self, request: &Request) -> Response {
-		println!("{:?}", request);
+		println!("> {:?}", request);
 
 		match request.method() {
 			Method::GET => get_router(request.path()),

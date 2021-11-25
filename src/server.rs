@@ -19,7 +19,7 @@ impl Server {
 	pub fn run(self, mut handler: impl Handler) {
 		let listener = TcpListener::bind(&self.address).unwrap();
 
-		println!("Listening on {}", self.address);
+		println!("* Listening on {}", self.address);
 
 		loop {
 			match listener.accept() {
@@ -31,12 +31,12 @@ impl Server {
 }
 
 fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut impl Handler) {
-	println!("\nConnection received from {}", address);
+	println!("\n> Connection received from {}", address);
 
 	let mut buffer = [0; BUFFER_SIZE];
 	let response = match stream.read(&mut buffer) {
 		Ok(size) => {
-			println!("Received a request: {}", String::from_utf8_lossy(&buffer[..size]));
+			println!("> Received a request: {}", String::from_utf8_lossy(&buffer[..size]));
 			match Request::try_from(&buffer as &[u8]) {
 				Ok(request) => {
 					handler.handle_request(&request)
@@ -51,8 +51,8 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut 
 		}
 	};
 
-	println!("{:?}", response);
+	println!("< {:?}", response);
 	if let Err(e) = response.send(&mut stream) {
-		println!("Failed to send response: {}", e);
+		println!("x Failed to send response: {}", e);
 	}
 }
