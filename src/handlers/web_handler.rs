@@ -13,14 +13,27 @@ impl WebHandler {
 
 	fn read_file(&self, file_path: &str) -> Option<String> {
 		let path = format!("{}/{}", self.public_path, file_path);
-		fs::read_to_string(path).ok()
+		match fs::canonicalize(path) {
+			Ok(path) => {
+				if path.starts_with(&self.public_path) {
+					fs::read_to_string(path).ok()
+				} else {
+					eprintln!("Directory Traversal Attack Attempted: {}", file_path);
+					None
+				}
+			},
+			Err(e) => None
+		}
 	}
 
 	fn get_router(&self, path: &str) -> Response {
 		match path {
 			"/" => ok_response(self.read_file("index.html")),
 			"/hello" => ok_response(self.read_file("html/helloworld.html")),
-			_ => not_found_response(self.read_file("404.html"))
+			_ => match self.read_file(path) {
+				Some(s) => ok_response(Some(s)),
+				None => not_found_response(self.read_file("404.html"))
+			}
 		}
 	}
 
