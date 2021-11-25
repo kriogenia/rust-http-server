@@ -1,5 +1,6 @@
 use super::Handler;
 use crate::http::{Method, Request, Response, StatusCode};
+use std::fs;
 
 pub struct WebHandler {
 	public_path: String
@@ -9,6 +10,21 @@ impl WebHandler {
 	pub fn new(public_path: String) -> Self {
 		WebHandler { public_path }
 	}
+
+	fn read_file(&self, file_path: &str) -> Option<String> {
+		let path = format!("{}/{}", self.public_path, file_path);
+		fs::read_to_string(path).ok()
+	}
+
+	fn get_router(&self, path: &str) -> Response {
+		match path {
+			"/" => ok_response(self.read_file("index.html")),
+			"/hello" => ok_response(self.read_file("html/helloworld.html")),
+			_ => not_found_response(self.read_file("404.html"))
+		}
+	}
+
+
 }
 
 impl Handler for WebHandler {
@@ -16,24 +32,16 @@ impl Handler for WebHandler {
 		println!("> {:?}", request);
 
 		match request.method() {
-			Method::GET => get_router(request.path()),
-			_ => not_found_response()
+			Method::GET => self.get_router(request.path()),
+			_ => not_found_response(self.read_file("404.html"))
 		}
 	}
 }
 
-fn get_router(path: &str) -> Response {
-	match path {
-		"/" => ok_response("<h1>Hi</h1><p>And welcome to my Rust HTTP Server</p>".to_string()),
-		"/hello" => ok_response("<h1>Hello World!</h1>".to_string()),
-		_ => not_found_response()
-	}
+fn ok_response(content: Option<String>) -> Response {
+	Response::new(StatusCode::Ok, content)
 }
 
-fn ok_response(body: String) -> Response {
-	Response::new(StatusCode::Ok, Some(body))
-}
-
-fn not_found_response() -> Response {
-	Response::new(StatusCode::NotFound, Some("<h1>404</h1>".to_string()))
+fn not_found_response(content: Option<String>) -> Response {
+	Response::new(StatusCode::NotFound, content)
 }
