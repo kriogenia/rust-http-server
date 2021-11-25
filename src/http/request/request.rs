@@ -14,7 +14,7 @@ impl<'buf> Request<'buf> {
 	pub fn path(&self) -> &'buf str {
 		&self.path
 	}
-	pub fn query(&self) -> Option<&QueryMap<'buf>> {
+	pub fn _query(&self) -> Option<&QueryMap<'buf>> {
 		self.query.as_ref()
 	}
 	pub fn method(&self) -> &Method {

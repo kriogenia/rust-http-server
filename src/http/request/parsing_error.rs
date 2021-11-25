@@ -10,8 +10,8 @@ pub enum ParsingError {
 	InvalidMethod,
 }
 
-impl ParsingError {
-	pub fn message(&self) -> &str {
+impl<'e> ParsingError {
+	pub fn message(&self) -> &'e str {
 		match self {
 			Self::InvalidRequest => "Invalid request",
 			Self::InvalidEncoding => "Invalid encoding",

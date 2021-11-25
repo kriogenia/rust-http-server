@@ -42,12 +42,12 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut 
 					handler.handle_request(&request)
 				}
 				Err(e) => {
-					handler.handle_bad_request(&HttpError::from(e))
+					handler.handle_bad_request(HttpError::from(e))
 				}
 			}
 		}
 		Err(_) => {
-			handler.handle_bad_request(&HttpError::RequestTimeout)
+			handler.handle_bad_request(HttpError::RequestTimeout)
 		}
 	};
 

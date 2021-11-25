@@ -3,8 +3,9 @@ use crate::http::{HttpError, Request, Response};
 pub trait Handler {
 	fn handle_request(&mut self, request: &Request) -> Response;
 
-	fn handle_bad_request(&mut self, e: &HttpError) -> Response {
+	fn handle_bad_request(&mut self, e: HttpError) -> Response {
 		eprintln!("Error managing response: {}", e);
-		Response::new(e.code(), Some(e.message().to_string()))
+		let message = e.message().to_string();
+		Response::new(e.into(), Some(message))
 	}
 }

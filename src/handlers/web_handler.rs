@@ -22,7 +22,7 @@ impl WebHandler {
 					None
 				}
 			},
-			Err(e) => None
+			Err(_) => None
 		}
 	}
 

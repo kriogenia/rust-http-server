@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter};
+use crate::http::HttpError;
 
 #[derive(Copy, Clone, Debug)]
 pub enum StatusCode {
@@ -21,7 +22,18 @@ impl StatusCode {
 	}
 }
 
-/** Printing */
+// Casting
+
+impl From<HttpError<'_>> for StatusCode {
+	fn from(e: HttpError) -> Self {
+		match e {
+			HttpError::BadRequest(_) => Self::BadRequest,
+			HttpError::RequestTimeout => Self::RequestTimeout
+		}
+	}
+}
+
+// Printing
 
 impl Display for StatusCode {
 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

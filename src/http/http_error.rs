@@ -1,25 +1,17 @@
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use crate::http::request::ParsingError;
-use crate::http::StatusCode;
 
-pub enum HttpError {
-	BadRequest(String),
+pub enum HttpError<'e> {
+	BadRequest(&'e str),
 	RequestTimeout,
 }
 
-impl HttpError {
+impl<'e> HttpError<'e> {
 	pub fn message(&self) -> &str {
 		match self {
 			Self::BadRequest(message) => message,
 			Self::RequestTimeout => "Request timeout"
-		}
-	}
-
-	pub fn code(&self) -> StatusCode {
-		match self {
-			Self::BadRequest(_) => StatusCode::BadRequest,
-			Self::RequestTimeout => StatusCode::RequestTimeout
 		}
 	}
 
@@ -33,17 +25,17 @@ impl HttpError {
 
 /** Error */
 
-impl Error for HttpError {}
+impl<'e> Error for HttpError<'e> {}
 
 /** Printing */
 
-impl Debug for HttpError {
+impl<'e> Debug for HttpError<'e> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
 		write!(f, "{}", self.message())
 	}
 }
 
-impl<'e> Display for HttpError {
+impl<'e> Display for HttpError<'e> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
 		write!(f, "{}", self.message())
 	}
@@ -51,8 +43,8 @@ impl<'e> Display for HttpError {
 
 /** Conversions */
 
-impl From<ParsingError> for HttpError {
+impl<'e> From<ParsingError> for HttpError<'e> {
 	fn from(e: ParsingError) -> Self {
-		Self::BadRequest(e.message().to_owned())
+		Self::BadRequest(e.message())
 	}
 }

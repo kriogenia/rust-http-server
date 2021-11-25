@@ -28,6 +28,7 @@ I still to plan to add some additional features:
 * Headers to the responses.
 * An endpoint with logic based on the queries.
 * More environment properties.
+* Doubtful: Make the server multithreaded
 
 ## Deployment
 
