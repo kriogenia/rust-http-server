@@ -13,7 +13,7 @@ pub enum Value<'buf> {
 }
 
 impl<'buf> QueryMap<'buf> {
-	pub fn get(&self, key: &str) -> Option<&Value> {
+	pub fn _get(&self, key: &str) -> Option<&Value> {
 		self.data.get(key)
 	}
 

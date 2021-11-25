@@ -1,4 +1,3 @@
-use std::net::TcpStream;
 use std::io::{Result as IoResult, Write};
 use super::StatusCode;
 
@@ -15,7 +14,7 @@ impl Response {
 		Self { status_code, body }
 	}
 
-	pub fn send(&self, stream: &mut TcpStream) -> IoResult<()> {
+	pub fn send(&self, stream: &mut impl Write) -> IoResult<()> {
 		let body = if self.body.is_some() { &self.body.as_ref().unwrap() } else { "" };
 		write!(
 			stream,

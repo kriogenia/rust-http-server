@@ -4,9 +4,9 @@ use std::fmt::{Display, Formatter};
 pub enum StatusCode {
 	Ok = 200,
 	BadRequest = 400,
-	NotFound = 404,
+	_NotFound = 404,
 	RequestTimeout = 408,
-	InternalServerError = 500
+	_InternalServerError = 500
 }
 
 impl StatusCode {
@@ -14,9 +14,9 @@ impl StatusCode {
 		match self {
 			Self::Ok => "Ok",
 			Self::BadRequest => "Bad Request",
-			Self::NotFound => "Not Found",
+			Self::_NotFound => "Not Found",
 			Self::RequestTimeout => "Request Timeout",
-			Self::InternalServerError => "Internal Server Error"
+			Self::_InternalServerError => "Internal Server Error"
 		}
 	}
 }
