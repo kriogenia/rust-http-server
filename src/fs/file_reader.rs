@@ -5,8 +5,8 @@ pub struct FileReader {
 }
 
 impl FileReader {
-	pub fn new(public_path: String) -> FileReader {
-		FileReader { public_path }
+	pub fn new(public_path: &str) -> FileReader {
+		FileReader { public_path: String::from(public_path) }
 	}
 
 	pub fn read_file(&self, file_path: &str) -> Option<String> {

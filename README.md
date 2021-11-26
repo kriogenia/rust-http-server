@@ -12,6 +12,7 @@ And damn, it really was a ride.
 This server can:
 
 * Easily route as many new endpoints as you wish.
+* Support nested and dedicated handlers/routing.
 * Work with the different `METHOD` types.
 * Build different types of Responses.
 * Handle and map query parameters.
@@ -53,3 +54,24 @@ curl -XGET "127.0.0.1:8080/hello"
 
 Or just navigating to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) to see the index page.
 Going any other endpoint will return the 404 page.
+
+## Design
+
+The follow diagram represents the architecture and design of the server.
+The overall flow starts with the creation of a new Server with the address it will be deployed on.
+That server can be launch providing it a request Handler.
+
+In this basic server the Handler are also the Routers, but that logic could be easily extracted.
+There's also a MultiHandler using the composite pattern to allow the Server to work with more than one handler.
+In this prototype we also created a WebHandler and an ApiHandler, the first one serves the html pages
+and the other one responds to API REST requests returning JSON responses.
+Both Handlers use a FileReader that reads and returns the content of the requested public file.
+It also provides protection against Directory Traversal Attacks.
+
+Each request comes from a TcpListener of the Server that it's parsed into a Request.
+Requests contain the method, protocol, headers and query parameters of the request.
+The entities implementing the Handler trait receive those requests and generate a Response
+if they how to satisfy the Request.
+Those Responses are then returned to the Server and from there to the client.
+
+### TODO CLASS DIAGRAM

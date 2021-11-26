@@ -7,7 +7,7 @@ use server::Server;
 use handlers::WebHandler;
 use std::env;
 use crate::fs::FileReader;
-use crate::handlers::{MultiHandler};
+use crate::handlers::{ApiHandler, MultiHandler};
 
 const IP: &str = "127.0.0.1";
 const PORT: &str = "8080";
@@ -20,10 +20,11 @@ fn main() {
 	let public_path = env::var("PUBLIC_PATH").unwrap_or(default_path);
 	println!("* Server public path: {}", public_path);
 
-	let file_reader = Box::new(FileReader::new(public_path));
 	// Set handlers
 	let mut root_handler = MultiHandler::new();
-	root_handler.add(Box::new(WebHandler::new(file_reader)));
+	root_handler.add(Box::new(WebHandler::new(Box::new(FileReader::new(&public_path)))));
+	root_handler.add(Box::new(ApiHandler::new(Box::new(FileReader::new(&public_path)))));
+
 	// Launch server
 	let server = Server::new(format!("{}:{}", IP, PORT));
 	server.run(root_handler);

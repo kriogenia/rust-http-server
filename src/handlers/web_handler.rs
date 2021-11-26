@@ -8,13 +8,15 @@ pub struct WebHandler {
 
 impl WebHandler {
 	pub fn new(fs: Box<FileReader>) -> Self {
-		WebHandler { fs }
+		Self { fs }
 	}
 
 	fn get_router(&self, path: &str) -> Option<Response> {
 		match path {
 			"/" => ok_response(self.fs.read_file("index.html")),
-			"/hello" => ok_response(self.fs.read_file("helloworld.txt")),
+			"/hello" => ok_response(self.fs.read_file("helloworld.txt")
+				.and_then(|s| Some(format!("<p>{}</p>", s))
+			)),
 			_ => self.fs.read_file(path).and_then(|s| ok_response(Some(s)))
 		}
 	}
