@@ -6,8 +6,8 @@ pub struct MultiHandler {
 }
 
 impl MultiHandler {
-	pub fn new() {
-		MultiHandler { handlers: vec![] };
+	pub fn new() -> MultiHandler {
+		MultiHandler { handlers: vec![] }
 	}
 
 	pub fn add(&mut self, handler: Box<dyn Handler>) {
@@ -16,7 +16,12 @@ impl MultiHandler {
 }
 
 impl Handler for MultiHandler {
-	fn handle_request(&mut self, request: &Request) -> Option<Response> {
+	fn handle_request(&self, request: &Request) -> Option<Response> {
+		for handler in self.handlers.iter() {
+			if let Some(res) = handler.handle_request(request) {
+				return Some(res);
+			}
+		}
 		None
 	}
 }

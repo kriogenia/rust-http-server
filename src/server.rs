@@ -5,20 +5,22 @@ use crate::http::{HttpError, Request, Response, StatusCode};
 
 const BUFFER_SIZE: usize = 1024;
 
+/// A Server deployable in the given address
 pub struct Server {
 	address: String,
 }
 
 impl Server {
+	/// Builds a new server able to run in the given address
 	pub fn new(address: String) -> Self {
 		Self {
 			address
 		}
 	}
 
+	/// Runs the server with the provided request handler
 	pub fn run(self, mut handler: impl Handler) {
 		let listener = TcpListener::bind(&self.address).unwrap();
-
 		println!("* Listening on {}", self.address);
 
 		loop {

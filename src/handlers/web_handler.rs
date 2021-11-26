@@ -2,12 +2,12 @@ use crate::fs::FileReader;
 use super::Handler;
 use crate::http::{Method, Request, Response, StatusCode};
 
-pub struct WebHandler<'fr> {
-	fs: &'fr FileReader<'fr>
+pub struct WebHandler {
+	fs: Box<FileReader>
 }
 
-impl<'fr> WebHandler<'fr> {
-	pub fn new(fs: &'fr FileReader) -> Self {
+impl WebHandler {
+	pub fn new(fs: Box<FileReader>) -> Self {
 		WebHandler { fs }
 	}
 
@@ -21,8 +21,8 @@ impl<'fr> WebHandler<'fr> {
 
 }
 
-impl<'fr> Handler for WebHandler<'fr> {
-	fn handle_request(&mut self, request: &Request) -> Option<Response> {
+impl Handler for WebHandler {
+	fn handle_request(&self, request: &Request) -> Option<Response> {
 		println!("> {:?}", request);
 
 		match request.method() {
@@ -35,8 +35,4 @@ impl<'fr> Handler for WebHandler<'fr> {
 
 fn ok_response(content: Option<String>) -> Option<Response> {
 	Some(Response::new(StatusCode::Ok, content))
-}
-
-fn not_found_response(content: Option<String>) -> Response {
-	Response::new(StatusCode::NotFound, content)
 }

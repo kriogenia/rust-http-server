@@ -1,11 +1,11 @@
 use std::fs;
 
-pub struct FileReader<'s> {
-	public_path: &'s str
+pub struct FileReader {
+	public_path: String
 }
 
-impl<'s> FileReader<'s> {
-	pub fn new(public_path: &str) -> FileReader {
+impl FileReader {
+	pub fn new(public_path: String) -> FileReader {
 		FileReader { public_path }
 	}
 
@@ -13,7 +13,7 @@ impl<'s> FileReader<'s> {
 		let path = format!("{}/{}", self.public_path, file_path);
 		match fs::canonicalize(path) {
 			Ok(path) => {
-				if path.starts_with(self.public_path) {
+				if path.starts_with(&self.public_path) {
 					fs::read_to_string(path).ok()
 				} else {
 					eprintln!("Directory Traversal Attack attempted: {}", file_path);
