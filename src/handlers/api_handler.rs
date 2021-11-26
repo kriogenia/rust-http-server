@@ -7,16 +7,18 @@ const NAME_PARAM: &str = "name";
 
 pub struct ApiHandler {
 	fs: Box<FileReader>,
+	counter: Counter
 }
 
 impl ApiHandler {
 	pub fn new(fs: Box<FileReader>) -> Self {
-		Self { fs }
+		Self { fs, counter: Counter::new() }
 	}
 
 	fn get_router(&self, path: &str, request: &Request) -> Option<Response> {
 		match path {
 			"/hello" => self.get_hello(request.query()),
+			"/count" => Some(self.counter.parse()),
 			_ => None
 		}
 	}
@@ -24,17 +26,16 @@ impl ApiHandler {
 	fn get_hello(&self, queries: Option<&QueryMap>) -> Option<Response> {
 		if queries.is_some() {
 			if let Some(name) = queries.unwrap().get(NAME_PARAM) {
-				return ok_response( to_json_message(&format!("Hello {}!!!", name)));
+				return ok_response(to_json("message", &format!("Hello {}!!!", name)));
 			}
 		}
 		ok_response(self.fs.read_file("helloworld.txt")
-				.and_then(|s| to_json_message(&s)))
+			.and_then(|s| to_json("message", &s)))
 	}
 }
 
 impl Handler for ApiHandler {
 	fn handle_request(&self, request: &Request) -> Option<Response> {
-		dbg!("Request: {}", request);
 		// Works only in the API path
 		if request.path().starts_with(API_PATH) {
 			let api_path = &request.path()[API_PATH.bytes().count()..];
@@ -49,7 +50,7 @@ impl Handler for ApiHandler {
 
 	fn default_response(&self) -> Response {
 		Response::new(StatusCode::NotFound,
-		              to_json_message(StatusCode::NotFound.to_string()))
+		              to_json("message", StatusCode::NotFound.to_string()))
 	}
 }
 
@@ -57,6 +58,21 @@ fn ok_response(content: Option<String>) -> Option<Response> {
 	Some(Response::new(StatusCode::Ok, content))
 }
 
-fn to_json_message(message: &str) -> Option<String> {
-	Some(format!("{{\"message\":\"{}\"}}", message))
+fn to_json(key: &str, value: &str) -> Option<String> {
+	Some(format!("{{\"{}\":\"{}\"}}", key, value))
+}
+
+/** Counter */
+
+struct Counter(i32);
+
+impl Counter {
+	fn new() -> Self {
+		Self(0)
+	}
+
+	fn parse(&self) -> Response {
+		Response::new(StatusCode::Ok, Some(format!("{{\"count\":{}}}", self.0)))
+	}
+
 }

@@ -12,7 +12,6 @@ impl<'buf> QueryMap<'buf> {
 	}
 
 	fn add_pair(&mut self, key: &'buf str, value: &'buf str) {
-		dbg!("{}: {}", key, value);
 		// Boolean pair additions (if they're not yet added)
 		if value == "true" || value == "false" {
 			self.data.entry(key).or_insert(Value::Boolean(value.parse().unwrap()));
