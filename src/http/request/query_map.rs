@@ -1,24 +1,18 @@
 use std::collections::{HashMap};
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
 #[derive(Debug)]
 pub struct QueryMap<'buf> {
 	data: HashMap<&'buf str, Value<'buf>>,
 }
 
-#[derive(Debug)]
-pub enum Value<'buf> {
-	Boolean(bool),
-	Single(&'buf str),
-	Multiple(Vec<&'buf str>),
-}
-
 impl<'buf> QueryMap<'buf> {
-	pub fn _get(&self, key: &str) -> Option<&Value> {
+	pub fn get(&self, key: &str) -> Option<&Value> {
 		self.data.get(key)
 	}
 
-	/** Private */
 	fn add_pair(&mut self, key: &'buf str, value: &'buf str) {
+		dbg!("{}: {}", key, value);
 		// Boolean pair additions (if they're not yet added)
 		if value == "true" || value == "false" {
 			self.data.entry(key).or_insert(Value::Boolean(value.parse().unwrap()));
@@ -54,5 +48,24 @@ impl<'buf> From<&'buf str> for QueryMap<'buf> {
 		}
 
 		query
+	}
+}
+
+/** Value */
+
+#[derive(Debug)]
+pub enum Value<'buf> {
+	Boolean(bool),
+	Single(&'buf str),
+	Multiple(Vec<&'buf str>),
+}
+
+impl<'buf> Display for Value<'buf> {
+	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+		match self {
+			Self::Boolean(b) => write!(f, "{}", b),
+			Self::Single(s)=> write!(f, "{}", s),
+			Self::Multiple(v) => write!(f, "{:?}", v)
+		}
 	}
 }

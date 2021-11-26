@@ -41,6 +41,7 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut 
 			println!("> Received a request: {}", String::from_utf8_lossy(&buffer[..size]));
 			match Request::try_from(&buffer as &[u8]) {
 				Ok(request) => {
+					println!("> {:?}", request);
 					handler.handle_request(&request).unwrap_or(handler.default_response())
 				}
 				Err(e) => {

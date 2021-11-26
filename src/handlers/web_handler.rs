@@ -25,8 +25,6 @@ impl WebHandler {
 
 impl Handler for WebHandler {
 	fn handle_request(&self, request: &Request) -> Option<Response> {
-		println!("> {:?}", request);
-
 		match request.method() {
 			Method::GET => self.get_router(request.path()),
 			_ => None
