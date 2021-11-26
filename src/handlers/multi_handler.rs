@@ -16,8 +16,8 @@ impl MultiHandler {
 }
 
 impl Handler for MultiHandler {
-	fn handle_request(&self, request: &Request) -> Option<Response> {
-		for handler in self.handlers.iter() {
+	fn handle_request(&mut self, request: &Request) -> Option<Response> {
+		for handler in self.handlers.iter_mut() {
 			if let Some(res) = handler.handle_request(request) {
 				return Some(res);
 			}

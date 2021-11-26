@@ -1,5 +1,6 @@
 pub use request::Request;
 pub use request::QueryMap;
+pub use request::QueryValue;
 pub use response::Response;
 pub use response::StatusCode;
 pub use methods::Method;

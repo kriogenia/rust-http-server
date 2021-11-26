@@ -13,22 +13,21 @@ This server can:
 
 * Easily route as many new endpoints as you wish.
 * Support nested and dedicated handlers/routing.
-* Work with the different `METHOD` types.
+* Implement REST and work with the different `METHOD` types.
 * Build different types of Responses.
 * Handle, map and compute query parameters.
 * Serve static pages and resources.
 * Accept different and customizable request handlers.
 * Manage gracefully all known errors.
-* Evade Directory Traversal Attacks
+* Evade Directory Traversal Attacks.
 
 ## Planned
 
 I still to plan to add some additional features:
 
 * Headers to the responses.
-* An API REST set of functions
 * More environment properties.
-* Doubtful: Make the server multithreaded
+* *Doubtful*: Make the server multithreaded
 
 ## Deployment
 
@@ -48,11 +47,30 @@ It's also possible to use the following environment variables to customize the s
 Once the server is deployed it can be tested calling the different endpoints, for example:
 
 ```shell
-curl -XGET "127.0.0.1:8080/hello"
+curl -XGET "http://127.0.0.1:8080/hello"
 ```
 
 Or just navigating to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) to see the index page.
-Going any other endpoint will return the 404 page.
+Going any other endpoint in your browser will yield the 404 page.
+
+Aside from that, the server also has an API REST with its own and more powerful Hello World!,
+because it accepts a custom name to generate the salute using query parameters.
+
+```shell
+curl -XGET "http://127.0.0.1:8080/api/hello"
+curl -XGET "http://127.0.0.1:8080/api/hello?name=Kaladin"
+```
+
+And finally, a complete and working REST interface using different methods to handle a counter.
+You can try the following requests to test it.
+
+```shell
+curl -XGET "http://127.0.0.1:8080/api/count"
+curl -XPOST "http://127.0.0.1:8080/api/count"
+curl -XPOST "http://127.0.0.1:8080/api/count?value=3"
+curl -XDELETE "http://127.0.0.1:8080/api/count"
+curl -XPOST "http://127.0.0.1:8080/api/count?value=NaN"
+```
 
 ## Design
 

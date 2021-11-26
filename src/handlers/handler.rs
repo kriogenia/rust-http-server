@@ -4,7 +4,7 @@ use crate::http::{HttpError, Request, Response, StatusCode};
 /// to address the request.
 pub trait Handler {
 	/// Handles a new valid request and returns the Response to send back if it knows how to manage it
-	fn handle_request(&self, request: &Request) -> Option<Response>;
+	fn handle_request(&mut self, request: &Request) -> Option<Response>;
 
 	/// Generates a default response that can be used as placeholder or as a backing response when the
 	/// proper handle_request fails to deliver a response

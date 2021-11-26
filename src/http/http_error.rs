@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
+use std::num::ParseIntError;
 use crate::http::request::ParsingError;
 
 pub enum HttpError<'e> {
@@ -48,3 +49,10 @@ impl<'e> From<ParsingError> for HttpError<'e> {
 		Self::BadRequest(e.message())
 	}
 }
+
+impl<'e> From<ParseIntError> for HttpError<'e> {
+	fn from(_: ParseIntError) -> Self {
+		Self::BadRequest("The provided value is not a string")
+	}
+}
+
