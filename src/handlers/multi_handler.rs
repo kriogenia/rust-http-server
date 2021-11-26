@@ -24,4 +24,9 @@ impl Handler for MultiHandler {
 		}
 		None
 	}
+
+	fn default_response(&self) -> Response {
+		self.handlers[0].default_response()
+	}
+
 }

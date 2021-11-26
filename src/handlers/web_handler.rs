@@ -28,8 +28,11 @@ impl Handler for WebHandler {
 		match request.method() {
 			Method::GET => self.get_router(request.path()),
 			_ => None
-			//_ => not_found_response(self.read_file("404.html"))
 		}
+	}
+
+	fn default_response(&self) -> Response {
+		Response::new(StatusCode::NotFound, self.fs.read_file("404.html"))
 	}
 }
 
