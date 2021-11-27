@@ -2,7 +2,7 @@ use std::num::ParseIntError;
 use std::ops::AddAssign;
 use crate::FileReader;
 use crate::handlers::Handler;
-use crate::http::{Method, QueryMap, QueryValue, Request, Response, StatusCode};
+use crate::http::{Header, Method, QueryMap, QueryValue, Request, Response, StatusCode};
 
 const API_PATH: &str = "/api";
 
@@ -25,7 +25,7 @@ impl ApiHandler {
 	fn get_router(&self, path: &str, request: &Request) -> Option<Response> {
 		match path {
 			HELLO => self.get_hello(request.query()),
-			COUNT => Some(self.counter.parse()),
+			COUNT => ok_response(self.counter.parse()),
 			_ => None
 		}
 	}
@@ -70,7 +70,7 @@ impl ApiHandler {
 			}
 		}
 		self.counter += val;
-		Some(self.counter.parse())
+		ok_response(self.counter.parse())
 	}
 }
 
@@ -95,7 +95,9 @@ impl Handler for ApiHandler {
 }
 
 fn ok_response(content: Option<String>) -> Option<Response> {
-	Some(Response::new(StatusCode::Ok, content))
+	let mut response = Response::new(StatusCode::Ok, content);
+	response.header(Header::ContentType, "application/json");
+	Some(response)
 }
 
 fn to_json(key: &str, value: &str) -> Option<String> {
@@ -115,8 +117,8 @@ impl Counter {
 		self.0 = 0;
 	}
 
-	fn parse(&self) -> Response {
-		Response::new(StatusCode::Ok, Some(format!("{{\"count\":{}}}", self.0)))
+	fn parse(&self) -> Option<String> {
+		Some(format!("{{\"count\":{}}}", self.0))
 	}
 }
 

@@ -1,6 +1,6 @@
 use crate::fs::FileReader;
 use super::Handler;
-use crate::http::{Method, Request, Response, StatusCode};
+use crate::http::{Header, Method, Request, Response, StatusCode};
 
 pub struct WebHandler {
 	fs: Box<FileReader>
@@ -37,5 +37,7 @@ impl Handler for WebHandler {
 }
 
 fn ok_response(content: Option<String>) -> Option<Response> {
-	Some(Response::new(StatusCode::Ok, content))
+	let mut response = Response::new(StatusCode::Ok, content);
+	response.header(Header::ContentType, "text/html");
+	Some(response)
 }

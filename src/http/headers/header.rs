@@ -3,7 +3,8 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 #[derive(Debug, Eq, Hash, PartialEq)]
 pub enum Header {
 	ContentLanguage,
-	ContentLength
+	ContentLength,
+	ContentType
 }
 
 /** Printing **/
@@ -12,7 +13,8 @@ impl Header {
 	fn to_string(&self) -> &str {
 		match self {
 			Self::ContentLanguage => "Content-Language",
-			Self::ContentLength => "Content-Length"
+			Self::ContentLength => "Content-Length",
+			Self::ContentType => "Content-Type"
 		}
 	}
 }

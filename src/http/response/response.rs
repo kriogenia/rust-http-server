@@ -21,6 +21,10 @@ impl Response {
 		}
 	}
 
+	pub fn header(&mut self, key: Header, value: &str) {
+		self.headers.add(key, value);
+	}
+
 	pub fn send(&mut self, stream: &mut impl Write) -> IoResult<()> {
 		self.headers.add(Header::ContentLanguage, "en-UK");
 

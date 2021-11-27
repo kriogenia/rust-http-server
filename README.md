@@ -15,6 +15,7 @@ This server can:
 * Support nested and dedicated handlers/routing.
 * Implement REST and work with the different `METHOD` types.
 * Build different types of Responses.
+* Append Headers to Responses.
 * Handle, map and compute query parameters.
 * Serve static pages and resources.
 * Accept different and customizable request handlers.
@@ -25,7 +26,6 @@ This server can:
 
 I still to plan to add some additional features:
 
-* Headers to the responses.
 * More environment properties.
 * *Doubtful*: Make the server multithreaded
 
