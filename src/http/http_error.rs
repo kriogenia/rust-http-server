@@ -3,12 +3,14 @@ use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use std::num::ParseIntError;
 use crate::http::request::ParsingError;
 
+/// HTTP Errors convertible to 4xx Responses
 pub enum HttpError<'e> {
 	BadRequest(&'e str),
 	RequestTimeout,
 }
 
 impl<'e> HttpError<'e> {
+	/// Informative Error message
 	pub fn message(&self) -> &str {
 		match self {
 			Self::BadRequest(message) => message,

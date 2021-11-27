@@ -1,5 +1,6 @@
 use std::fs;
 
+/// Reads and parses the files stored in the public folder
 pub struct FileReader {
 	public_path: String
 }
@@ -9,6 +10,8 @@ impl FileReader {
 		FileReader { public_path: String::from(public_path) }
 	}
 
+	/// Tries to read the specified file and returns the content if it exists and is parseable
+	/// It evades Directory Traversal Attacks
 	pub fn read_file(&self, file_path: &str) -> Option<String> {
 		let path = format!("{}/{}", self.public_path, file_path);
 		match fs::canonicalize(path) {

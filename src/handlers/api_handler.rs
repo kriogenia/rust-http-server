@@ -12,6 +12,8 @@ const COUNT: &str = "/count";
 const NAME_PARAM: &str = "name";
 const VALUE_PARAM: &str = "value";
 
+/// Handles all the request directed to the API under /api.
+/// This handle responds to the requests with JSONs.
 pub struct ApiHandler {
 	fs: Box<FileReader>,
 	counter: Counter,
@@ -22,6 +24,7 @@ impl ApiHandler {
 		Self { fs, counter: Counter::new() }
 	}
 
+	/// GET /api/* router
 	fn get_router(&self, path: &str, request: &Request) -> Option<Response> {
 		match path {
 			HELLO => self.get_hello(request.query()),
@@ -30,6 +33,7 @@ impl ApiHandler {
 		}
 	}
 
+	/// POST /api/* router
 	fn post_router(&mut self, path: &str, request: &Request) -> Option<Response> {
 		match path {
 			COUNT => self.post_count(request.query()),
@@ -37,6 +41,7 @@ impl ApiHandler {
 		}
 	}
 
+	/// DELETE /api/* router
 	fn delete_router(&mut self, path: &str, _: &Request) -> Option<Response> {
 		match path {
 			COUNT => {
@@ -47,6 +52,8 @@ impl ApiHandler {
 		}
 	}
 
+	/// Manages the /api/hello endpoint. By default it returns a Hello World! JSON.
+	/// In case that a "query" name exists it returns a JSON with Hello <name>!
 	fn get_hello(&self, queries: Option<&QueryMap>) -> Option<Response> {
 		if queries.is_some() {
 			if let Some(name) = queries.unwrap().get(NAME_PARAM) {
@@ -57,12 +64,15 @@ impl ApiHandler {
 			.and_then(|s| to_json("message", &s)))
 	}
 
+	/// Manages the POST /api/count call. By default adds one to the current count.
+	/// If a valid integer is supplied in the "value" query it adds that value.
+	/// In case that the integer is valid a Bad Request response is thrown.
 	fn post_count(&mut self, queries: Option<&QueryMap>) -> Option<Response> {
 		let mut val = 1;
 		if queries.is_some() {
 			if let Some(QueryValue::Single(v)) = queries.unwrap().get(VALUE_PARAM) {
 				match v.parse().map_err(|e: ParseIntError| e.into()) {
-					Ok(amount) => { val = amount; },
+					Ok(amount) => { val = amount; }
 					Err(e) => {
 						return Some(self.handle_bad_request(e));
 					}
@@ -94,18 +104,20 @@ impl Handler for ApiHandler {
 	}
 }
 
+/// Builds a 200 Response with the given body
 fn ok_response(content: Option<String>) -> Option<Response> {
 	let mut response = Response::new(StatusCode::Ok, content);
 	response.header(Header::ContentType, "application/json");
 	Some(response)
 }
 
+/// Formats a basic key-value json
 fn to_json(key: &str, value: &str) -> Option<String> {
 	Some(format!("{{\"{}\":\"{}\"}}", key, value))
 }
 
-/** Counter */
-
+/// Abstraction of the Counter managed with the /api/count requests.
+/// This implementation features operator overloading
 struct Counter(i32);
 
 impl Counter {
@@ -113,10 +125,12 @@ impl Counter {
 		Self(0)
 	}
 
+	/// Resets the count to 0
 	fn reset(&mut self) {
 		self.0 = 0;
 	}
 
+	/// Returns the JSON body string of the current state of the counter
 	fn parse(&self) -> Option<String> {
 		Some(format!("{{\"count\":{}}}", self.0))
 	}

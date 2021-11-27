@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use crate::http::HttpError;
 
+/// HTTP Status Codes used in the Server
 #[derive(Copy, Clone, Debug)]
 pub enum StatusCode {
 	Ok = 200,
@@ -12,6 +13,7 @@ pub enum StatusCode {
 }
 
 impl StatusCode {
+	/// String representation of the Code
 	pub fn to_string(&self) -> &str {
 		match self {
 			Self::Ok => "Ok",
@@ -24,7 +26,7 @@ impl StatusCode {
 	}
 }
 
-// Casting
+/** Casting **/
 
 impl From<HttpError<'_>> for StatusCode {
 	fn from(e: HttpError) -> Self {
@@ -35,7 +37,7 @@ impl From<HttpError<'_>> for StatusCode {
 	}
 }
 
-// Printing
+/** Printing **/
 
 impl Display for StatusCode {
 	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

@@ -1,16 +1,20 @@
 use std::collections::{HashMap};
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
+/// Map of parsed queries of a Request
 #[derive(Debug)]
 pub struct QueryMap<'buf> {
 	data: HashMap<&'buf str, Value<'buf>>,
 }
 
 impl<'buf> QueryMap<'buf> {
+	/// Returns the given in the specified query
 	pub fn get(&self, key: &str) -> Option<&Value> {
 		self.data.get(key)
 	}
 
+	/// Adds a new pair of query-value.
+	/// If the query is already defined, adds the value to the query
 	fn add_pair(&mut self, key: &'buf str, value: &'buf str) {
 		// Boolean pair additions (if they're not yet added)
 		if value == "true" || value == "false" {
@@ -29,6 +33,7 @@ impl<'buf> QueryMap<'buf> {
 			.or_insert(Value::Single(value));
 	}
 
+	/// Adds a query without value
 	fn add_single(&mut self, key: &'buf str) {
 		self.data.insert(key, Value::Boolean(true));
 	}
@@ -52,6 +57,8 @@ impl<'buf> From<&'buf str> for QueryMap<'buf> {
 
 /** Value */
 
+/// Representation of values stored in the QueryMap.
+/// <i>A possible improvement could be adding type defined values</i>
 #[derive(Debug)]
 pub enum Value<'buf> {
 	Boolean(bool),

@@ -5,6 +5,7 @@ use super::StatusCode;
 
 const HTTP_HEADER: &str = "HTTP/1.1";
 
+/// Response to return to the client request
 #[derive(Debug)]
 pub struct Response {
 	status_code: StatusCode,
@@ -21,10 +22,12 @@ impl Response {
 		}
 	}
 
+	/// Sets a new header for the Response
 	pub fn header(&mut self, key: Header, value: &str) {
 		self.headers.add(key, value);
 	}
 
+	/// Sends the response throught the given stream
 	pub fn send(&mut self, stream: &mut impl Write) -> IoResult<()> {
 		self.headers.add(Header::ContentLanguage, "en-UK");
 

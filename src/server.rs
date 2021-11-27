@@ -21,7 +21,7 @@ impl Server {
 	/// Runs the server with the provided request handler
 	pub fn run(self, mut handler: impl Handler) {
 		let listener = TcpListener::bind(&self.address).unwrap();
-		println!("* Listening on {}", self.address);
+		println!("* Listening on http://{}", self.address);
 
 		loop {
 			match listener.accept() {

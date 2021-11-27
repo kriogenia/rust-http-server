@@ -3,6 +3,7 @@ use crate::http::Method;
 use std::convert::TryFrom;
 use std::str;
 
+/// Parsed HTTP Request
 #[derive(Debug)]
 pub struct Request<'buf> {
 	path: &'buf str,
@@ -11,12 +12,17 @@ pub struct Request<'buf> {
 }
 
 impl<'buf> Request<'buf> {
+	/// Returns the request path
 	pub fn path(&self) -> &'buf str {
 		&self.path
 	}
+
+	/// Returns the queries provided in the request
 	pub fn query(&self) -> Option<&QueryMap<'buf>> {
 		self.query.as_ref()
 	}
+
+	/// Returns the method of the query
 	pub fn method(&self) -> &Method {
 		&self.method
 	}
@@ -48,6 +54,7 @@ impl<'buf> TryFrom<&'buf [u8]> for Request<'buf> {
 
 /** Auxiliary methods */
 
+/// Returns the next word in the buffer
 fn get_next_word(request: &str) -> Option<(&str, &str)> {
 	for (i, c) in request.chars().enumerate() {
 		if c.is_whitespace() {
@@ -57,6 +64,7 @@ fn get_next_word(request: &str) -> Option<(&str, &str)> {
 	return None;
 }
 
+/// If the relative reference is defined, reads the queries and return the path and the query map
 fn read_reference(reference: &str) -> (&str, Option<QueryMap>) {
 	match reference.find('?') {
 		Some(i) => (&reference[..i], Some(QueryMap::from(&reference[i + 1..]))),

@@ -90,3 +90,7 @@ if they how to satisfy the Request.
 Those Responses are then returned to the Server and from there to the client.
 
 ![Server Class Diagram](RustHttpServer.drawio.svg)
+
+Hope you liked it!!!
+
+![Ferris](public/img/rustacean-flat-happy.svg)
