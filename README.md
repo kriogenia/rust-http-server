@@ -22,12 +22,8 @@ This server can:
 * Manage gracefully all known errors.
 * Evade Directory Traversal Attacks.
 
-## Planned
-
-I still to plan to add some additional features:
-
-* More environment properties.
-* *Doubtful*: Make the server multithreaded
+What I didn't implement (_yet_) is multi-threading. 
+So, this server will only handle one request each time.
 
 ## Deployment
 
@@ -40,7 +36,9 @@ rustc run --package http-server --bin http-server
 
 It's also possible to use the following environment variables to customize the server:
 
-* PUBLIC_PATH: to establish the path to use as public assets route
+* **RUST_SERVER_ADDRESS**: to set the IP address for the server.
+* **RUST_SERVER_PORT**: to specify the port where the server will be listening.
+* **RUST_SERVER_PUBLIC_PATH**: to establish the path to use as public assets route.
 
 ## Usage
 
@@ -91,4 +89,4 @@ The entities implementing the Handler trait receive those requests and generate 
 if they how to satisfy the Request.
 Those Responses are then returned to the Server and from there to the client.
 
-### TODO CLASS DIAGRAM
+![Server Class Diagram](RustHttpServer.drawio.svg)
