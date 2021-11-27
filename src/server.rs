@@ -36,7 +36,7 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut 
 	println!("\n> Connection received from {}", address);
 
 	let mut buffer = [0; BUFFER_SIZE];
-	let response = match stream.read(&mut buffer) {
+	let mut response = match stream.read(&mut buffer) {
 		Ok(size) => {
 			println!("> Received a request: {}", String::from_utf8_lossy(&buffer[..size]));
 			match Request::try_from(&buffer as &[u8]) {
@@ -54,7 +54,6 @@ fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &mut 
 		}
 	};
 
-	println!("< {:?}", response);
 	if let Err(e) = response.send(&mut stream) {
 		println!("x Failed to send response: {}", e);
 	}

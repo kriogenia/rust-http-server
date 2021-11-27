@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter};
+use std::fmt::{Display, Formatter, Result as FmtResult};
 use crate::http::HttpError;
 
 #[derive(Copy, Clone, Debug)]
@@ -38,7 +38,7 @@ impl From<HttpError<'_>> for StatusCode {
 // Printing
 
 impl Display for StatusCode {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
 		write!(f, "{}", *self as u16)
 	}
 }

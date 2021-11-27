@@ -16,12 +16,6 @@ impl<'e> HttpError<'e> {
 		}
 	}
 
-	/*
-	pub fn toJson(&self) -> &str {
-		let mut message = "{\"message\":\"".to_owned();
-		message.push_str(self.message());
-		message.push_str("\"}")
-	}*/
 }
 
 /** Error */
