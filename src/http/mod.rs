@@ -1,14 +1,14 @@
-pub use request::Request;
+pub use headers::Header;
+pub use http_error::HttpError;
+pub use methods::Method;
 pub use request::QueryMap;
 pub use request::QueryValue;
+pub use request::Request;
 pub use response::Response;
-pub use headers::Header;
 pub use response::StatusCode;
-pub use methods::Method;
-pub use http_error::HttpError;
 
+mod headers;
+mod http_error;
 mod methods;
 mod request;
 mod response;
-mod http_error;
-mod headers;
