@@ -14,11 +14,12 @@ pub enum ParsingError {
 impl<'e> ParsingError {
     /// String message of the error
     pub fn message(&self) -> &'e str {
+        use ParsingError::*;
         match self {
-            Self::Request => "Invalid request",
-            Self::Encoding => "Invalid encoding",
-            Self::Protocol => "Invalid protocol",
-            Self::Method => "Invalid method",
+            Request => "Invalid request",
+            Encoding => "Invalid encoding",
+            Protocol => "Invalid protocol",
+            Method => "Invalid method",
         }
     }
 }

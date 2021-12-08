@@ -20,16 +20,17 @@ impl FromStr for Method {
     type Err = InvalidMethodError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use Method::*;
         match s {
-            "GET" => Ok(Self::Get),
-            "DELETE" => Ok(Self::Delete),
-            "POST" => Ok(Self::Post),
-            "PUT" => Ok(Self::Put),
-            "HEAD" => Ok(Self::Head),
-            "CONNECT" => Ok(Self::Connect),
-            "OPTIONS" => Ok(Self::Options),
-            "TRACE" => Ok(Self::Trace),
-            "PATCH" => Ok(Self::Patch),
+            "GET" => Ok(Get),
+            "DELETE" => Ok(Delete),
+            "POST" => Ok(Post),
+            "PUT" => Ok(Put),
+            "HEAD" => Ok(Head),
+            "CONNECT" => Ok(Connect),
+            "OPTIONS" => Ok(Options),
+            "TRACE" => Ok(Trace),
+            "PATCH" => Ok(Patch),
             _ => Err(InvalidMethodError),
         }
     }

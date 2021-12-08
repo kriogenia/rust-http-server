@@ -12,9 +12,10 @@ pub enum HttpError<'e> {
 impl<'e> HttpError<'e> {
     /// Informative Error message
     pub fn message(&self) -> &str {
+        use HttpError::*;
         match self {
-            Self::BadRequest(message) => message,
-            Self::RequestTimeout => "Request timeout",
+            BadRequest(message) => message,
+            RequestTimeout => "Request timeout",
         }
     }
 }

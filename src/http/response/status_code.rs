@@ -15,13 +15,14 @@ pub enum StatusCode {
 impl StatusCode {
     /// String representation of the Code
     pub fn message(&self) -> &str {
+        use StatusCode::*;
         match self {
-            Self::Ok => "Ok",
-            Self::NoContent => "No Content",
-            Self::BadRequest => "Bad Request",
-            Self::NotFound => "Not Found",
-            Self::RequestTimeout => "Request Timeout",
-            Self::_InternalServerError => "Internal Server Error",
+            Ok => "Ok",
+            NoContent => "No Content",
+            BadRequest => "Bad Request",
+            NotFound => "Not Found",
+            RequestTimeout => "Request Timeout",
+            _InternalServerError => "Internal Server Error",
         }
     }
 }

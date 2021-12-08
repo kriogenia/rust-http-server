@@ -16,11 +16,12 @@ pub enum Header {
 impl Header {
     /// Returns the string representation of the Header
     fn to_string(&self) -> &str {
+        use Header::*;
         match self {
-            Self::_Authentication => "Authentication",
-            Self::ContentLanguage => "Content-Language",
-            Self::ContentLength => "Content-Length",
-            Self::ContentType => "Content-Type",
+            _Authentication => "Authentication",
+            ContentLanguage => "Content-Language",
+            ContentLength => "Content-Length",
+            ContentType => "Content-Type",
         }
     }
 }
