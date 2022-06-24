@@ -1,5 +1,5 @@
 use super::Handler;
-use file_system::fs::FileReader;
+use file_system::FileReader;
 use crate::http::{Header, Method, Request, Response, StatusCode};
 
 /// Handler in charge of serving all the web resources and endpoints.

@@ -1,11 +1,11 @@
-use file_system::fs::FileReader;
-
-use crate::http::{Header, Method, QueryMap, QueryValue, Request, Response, StatusCode};
 use std::num::ParseIntError;
 use std::ops::AddAssign;
 use std::sync::{Arc, Mutex};
 
 use super::Handler;
+use crate::http::{Header, Method, QueryMap, QueryValue, Request, Response, StatusCode};
+
+use file_system::FileReader;
 
 const API_PATH: &str = "/api";
 
@@ -24,10 +24,10 @@ pub struct RestHandler {
 
 impl RestHandler {
     pub fn starting_at_zero(fs: Box<FileReader>) -> Self {
-		RestHandler::new(fs, Arc::new(Mutex::new(Counter::new())))
-	}
-	
-	fn new(fs: Box<FileReader>, counter: Arc<Mutex<Counter>>) -> Self {
+        RestHandler::new(fs, Arc::new(Mutex::new(Counter::new())))
+    }
+
+    fn new(fs: Box<FileReader>, counter: Arc<Mutex<Counter>>) -> Self {
         Self { fs, counter }
     }
 
@@ -91,7 +91,7 @@ impl RestHandler {
                 }
             }
         }
-		let mut counter = (*self.counter).lock().unwrap();
+        let mut counter = (*self.counter).lock().unwrap();
         *counter += val;
         ok_response(counter.parse())
     }

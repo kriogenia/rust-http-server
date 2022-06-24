@@ -2,7 +2,7 @@ use prelude::*;
 
 use std::{env, sync::Arc};
 
-use file_system::fs::FileReader;
+use file_system::FileReader;
 use request_handler::handler::{root::RootHandler, web::WebHandler, Handler, rest::RestHandler};
 use server::Server;
 
