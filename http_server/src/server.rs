@@ -10,23 +10,24 @@ const BUFFER_SIZE: usize = 1024;
 /// A Server deployable in the given address
 pub struct Server<'a> {
     address: &'a str,
+    port: &'a str,
 }
 
 impl<'a> Server<'a> {
     /// Builds a new server able to run in the given address
-    pub fn new(address: &'a str) -> Self {
-        Self { address }
+    pub fn new(address: &'a str, port: &'a str) -> Self {
+        Self { address, port }
     }
 
     /// Runs the server with the provided request handler
-    pub fn run<H>(self, handler: Box<H>)
+    pub fn run<H>(self, handler: Arc<H>)
     where
         H: Handler + 'static,
     {
-        let listener = TcpListener::bind(&self.address).expect("[Unable to bind port]");
-        println!("* Listening on http://{}", self.address);
+		let address = format!("{}:{}", self.address, self.port);
+        let listener = TcpListener::bind(&address).expect("[Unable to bind port]");
+        println!("* Listening on http://{}", address);
 
-        let handler = Arc::new(handler);
         loop {
             match listener.accept() {
                 Ok(request) => {
@@ -43,10 +44,7 @@ impl<'a> Server<'a> {
     }
 }
 
-fn handle_request<H: Handler>(
-    (mut stream, address): (TcpStream, SocketAddr),
-    handler: Arc<Box<H>>,
-) {
+fn handle_request<H: Handler>((mut stream, address): (TcpStream, SocketAddr), handler: Arc<H>) {
     println!("\n> Connection received from {}", address);
 
     let mut buffer = [0; BUFFER_SIZE];

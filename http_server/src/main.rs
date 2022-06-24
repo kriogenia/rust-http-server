@@ -1,17 +1,13 @@
-mod server;
+use prelude::*;
 
-use std::env;
+use std::{env, sync::Arc};
 
 use file_system::fs::FileReader;
 use request_handler::handlers::{root::RootHandler, web::WebHandler, Handler};
 use server::Server;
 
-const ADDRESS_VAR: &str = "RUST_SERVER_ADDRESS";
-const PORT_VAR: &str = "RUST_SERVER_PORT";
-const PUBLIC_PATH_VAR: &str = "RUST_SERVER_PUBLIC_PATH";
-
-const DEFAULT_ADDRESS: &str = "127.0.0.1";
-const DEFAULT_PORT: &str = "8080";
+mod prelude;
+mod server;
 
 /// Launching point of the application
 fn main() {
@@ -30,7 +26,6 @@ fn main() {
     let root_handler = RootHandler::new(handlers);
 
     // Launch server
-    let address = format!("{}:{}", address, port);
-    let server = Server::new(&address);
-    server.run(Box::new(root_handler));
+    let server = Server::new(&address, &port);
+    server.run(Arc::new(root_handler));
 }
