@@ -3,7 +3,7 @@ mod server;
 use std::env;
 
 use file_system::fs::FileReader;
-use request_handler::handlers::{root::RootHandler, web::{WebHandler, self}};
+use request_handler::handlers::{root::RootHandler, web::WebHandler, Handler};
 use server::Server;
 
 const ADDRESS_VAR: &str = "RUST_SERVER_ADDRESS";
@@ -26,11 +26,11 @@ fn main() {
 
     // Set handlers
     let web_handler = WebHandler::new(Box::new(FileReader::new(&public_path)));
-    //let handlers = vec![Box::new(web_handler)];
-    //let mut root_handler = RootHandler::new(handlers);
+    let handlers: Vec<Box<dyn Handler>> = vec![Box::new(web_handler)];
+    let root_handler = RootHandler::new(handlers);
 
     // Launch server
     let address = format!("{}:{}", address, port);
     let server = Server::new(&address);
-    server.run(Box::new(web_handler));
+    server.run(Box::new(root_handler));
 }

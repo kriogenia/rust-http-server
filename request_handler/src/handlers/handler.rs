@@ -2,7 +2,7 @@ use crate::http::{HttpError, Request, Response, StatusCode};
 
 /// Receives and handles HTTP requests. It can return a Response if it contains the logic
 /// to address the request.
-pub trait Handler {
+pub trait Handler: Send + Sync {
     /// Handles a new valid request and returns the Response to send back if it knows how to manage it
     fn handle_request(&self, request: &Request) -> Option<Response>;
 

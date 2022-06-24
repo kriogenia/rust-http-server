@@ -21,7 +21,7 @@ impl<'a> Server<'a> {
     /// Runs the server with the provided request handler
     pub fn run<H>(self, handler: Box<H>)
     where
-        H: Handler + Send + Sync + 'static,
+        H: Handler + 'static,
     {
         let listener = TcpListener::bind(&self.address).expect("[Unable to bind port]");
         println!("* Listening on http://{}", self.address);
@@ -43,10 +43,10 @@ impl<'a> Server<'a> {
     }
 }
 
-fn handle_request<H>((mut stream, address): (TcpStream, SocketAddr), handler: Arc<Box<H>>)
-where
-    H: Handler + Send + Sync,
-{
+fn handle_request<H: Handler>(
+    (mut stream, address): (TcpStream, SocketAddr),
+    handler: Arc<Box<H>>,
+) {
     println!("\n> Connection received from {}", address);
 
     let mut buffer = [0; BUFFER_SIZE];

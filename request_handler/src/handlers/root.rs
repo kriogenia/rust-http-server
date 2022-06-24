@@ -4,24 +4,18 @@ use crate::http::{Request, Response};
 /// Composite handler to allow the use of multiple Handlers.
 /// <i>A possible feature to thsi is adding the option to use an optional root path for the handler
 /// allowing to nest handlers to manage path ramifications</i>
-pub struct MultiHandler {
+pub struct RootHandler {
     handlers: Vec<Box<dyn Handler>>,
 }
 
-impl MultiHandler {
-    pub fn new() -> MultiHandler {
-        MultiHandler { handlers: vec![] }
+impl RootHandler {
+    pub fn new(handlers: Vec<Box<dyn Handler>>) -> RootHandler {
+        RootHandler { handlers }
     }
 
-    /// Adds a new Handler.
-    /// <i>Right now, no way of remove exists as my current implementation wouldn't need it
-    /// and it would be going overboard</i>
-    pub fn add(&mut self, handler: Box<dyn Handler>) {
-        self.handlers.push(handler);
-    }
 }
 
-impl Handler for MultiHandler {
+impl Handler for RootHandler {
     fn handle_request(&self, request: &Request) -> Option<Response> {
         for handler in self.handlers.iter() {
             if let Some(res) = handler.handle_request(request) {
