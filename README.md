@@ -1,5 +1,5 @@
 # rust-http-server
-HTTP Server developed with Rust.
+Multithread HTTP Server developed with Rust.
 
 This one is a little project made to address two objectives.
 The first one is in line with my current status as web developer, to develop my own HTTP Server and 
@@ -11,6 +11,7 @@ And damn, it really was a ride.
 
 This server can:
 
+* Manage concurrent multiple requests at the same time with multithreading.
 * Easily route as many new endpoints as you wish.
 * Support nested and dedicated handlers/routing.
 * Implement REST and work with the different `METHOD` types.
@@ -22,16 +23,14 @@ This server can:
 * Manage gracefully all known errors.
 * Evade Directory Traversal Attacks.
 
-What I didn't implement (_yet_) is multi-threading. 
-So, this server will only handle one request each time.
-
 ## Deployment
 
 To be able to deploy this server you'll need to have Rust installed on your system.
 Once it's installed you can clone the repo and use the following command to execute it in the port 8080.
 
 ```shell
-rustc run --package http-server --bin http-server
+cd http_server
+cargo run --release
 ```
 
 It's also possible to use the following environment variables to customize the server:
@@ -72,6 +71,7 @@ curl -XPOST "http://127.0.0.1:8080/api/count?value=NaN"
 
 ## Design
 
+WARNING: this is outdated and needs a fix
 The follow diagram represents the architecture and design of the server.
 The overall flow starts with the creation of a new Server with the address it will be deployed on.
 That server can be launch providing it a request Handler.
