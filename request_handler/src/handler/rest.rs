@@ -2,8 +2,14 @@ use std::num::ParseIntError;
 use std::ops::AddAssign;
 use std::sync::{Arc, Mutex};
 
+use crate::http::headers::Header;
+use crate::http::method::Method;
+use crate::http::request::Request;
+use crate::http::request::query::{QueryMap, Value as QueryValue};
+use crate::http::response::Response;
+use crate::http::status_code::StatusCode;
+
 use super::Handler;
-use crate::http::{Header, Method, QueryMap, QueryValue, Request, Response, StatusCode};
 
 use file_system::FileReader;
 
@@ -23,6 +29,7 @@ pub struct RestHandler {
 }
 
 impl RestHandler {
+	/// Builds a new REST counter handler with the counter at zero
     pub fn starting_at_zero(fs: Arc<FileReader>) -> Self {
         RestHandler::new(fs, Arc::new(Mutex::new(Counter::new())))
     }
@@ -135,6 +142,7 @@ fn to_json(key: &str, value: &str) -> Option<String> {
 
 /// Abstraction of the Counter managed with the /api/count requests.
 /// This implementation features operator overloading
+#[derive(Default)]
 struct Counter(i32);
 
 impl Counter {
@@ -157,11 +165,5 @@ impl Counter {
 impl AddAssign<i32> for Counter {
     fn add_assign(&mut self, rhs: i32) {
         self.0 += rhs
-    }
-}
-
-impl Default for Counter {
-    fn default() -> Self {
-        Self(Default::default())
     }
 }

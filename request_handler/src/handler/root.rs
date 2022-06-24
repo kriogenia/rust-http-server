@@ -1,5 +1,5 @@
 use crate::handler::Handler;
-use crate::http::{Request, Response};
+use crate::http::{request::Request, response::Response};
 
 /// Composite handler to allow the use of multiple Handlers.
 /// <i>A possible feature to thsi is adding the option to use an optional root path for the handler
@@ -12,7 +12,6 @@ impl RootHandler {
     pub fn new(handlers: Vec<Box<dyn Handler>>) -> RootHandler {
         RootHandler { handlers }
     }
-
 }
 
 impl Handler for RootHandler {

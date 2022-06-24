@@ -1,7 +1,6 @@
-use super::StatusCode;
-use crate::http::headers::HeaderMap;
-use crate::http::Header;
 use std::io::{Result as IoResult, Write};
+
+use super::{status_code::StatusCode, headers::{HeaderMap, Header}};
 
 const HTTP_HEADER: &str = "HTTP/1.1";
 
@@ -31,11 +30,11 @@ impl Response {
     pub fn send(&mut self, stream: &mut impl Write) -> IoResult<()> {
         self.headers.add(Header::ContentLanguage, "en-UK");
 
-        let body = if self.body.is_some() {
-            &self.body.as_ref().unwrap()
-        } else {
-            ""
-        };
+		let body = match self.body {
+			Some(ref body) => body,
+			None => ""
+		};
+
         self.headers
             .add(Header::ContentLength, &format!("{}", body.chars().count()));
 

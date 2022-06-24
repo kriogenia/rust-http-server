@@ -1,4 +1,4 @@
-use crate::http::methods::method::InvalidMethodError;
+use crate::http::method::InvalidMethodError;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use std::str::Utf8Error;

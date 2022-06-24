@@ -1,7 +1,12 @@
-use super::{ParsingError, QueryMap};
-use crate::http::Method;
+use crate::http::method::Method;
 use std::convert::TryFrom;
 use std::str;
+
+use self::parsing_error::ParsingError;
+use self::query::QueryMap;
+
+pub mod query;
+pub mod parsing_error;
 
 /// Parsed HTTP Request
 #[derive(Debug)]

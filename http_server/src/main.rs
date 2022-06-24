@@ -25,7 +25,7 @@ fn main() {
 
     // Set handlers
     let web_handler = WebHandler::new(file_reader.clone());
-	let counter_handler = RestHandler::starting_at_zero(file_reader.clone());
+	let counter_handler = RestHandler::starting_at_zero(file_reader);
     let handlers: Vec<Box<dyn Handler>> = vec![
 		Box::new(web_handler),
 		Box::new(counter_handler),	

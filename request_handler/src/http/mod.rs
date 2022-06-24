@@ -1,14 +1,7 @@
-pub use headers::Header;
-pub use http_error::HttpError;
-pub use methods::Method;
-pub use request::QueryMap;
-pub use request::QueryValue;
-pub use request::Request;
-pub use response::Response;
-pub use response::StatusCode;
+pub mod error;
+pub mod request;
+pub mod response;
 
-mod headers;
-mod http_error;
-mod methods;
-mod request;
-mod response;
+pub(crate) mod headers;
+pub(crate) mod method;
+pub(crate) mod status_code;

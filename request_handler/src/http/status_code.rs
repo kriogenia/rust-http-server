@@ -1,4 +1,4 @@
-use crate::http::HttpError;
+use super::error::HttpError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// HTTP Status Codes used in the Server

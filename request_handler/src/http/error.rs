@@ -1,7 +1,8 @@
-use crate::http::request::ParsingError;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use std::num::ParseIntError;
+
+use super::request::parsing_error::ParsingError;
 
 /// HTTP Errors convertible to 4xx Responses
 pub enum HttpError<'e> {

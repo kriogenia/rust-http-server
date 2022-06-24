@@ -1,5 +1,5 @@
 use request_handler::handler::Handler;
-use request_handler::http::{HttpError, Request};
+use request_handler::http::{error::HttpError, request::Request};
 use std::io::Read;
 use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::sync::Arc;

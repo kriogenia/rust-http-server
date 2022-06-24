@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
+use crate::http::{response::Response, status_code::StatusCode, request::Request, method::Method, headers::Header};
+
 use super::Handler;
 use file_system::FileReader;
-use crate::http::{Header, Method, Request, Response, StatusCode};
-
 /// Handler in charge of serving all the web resources and endpoints.
 /// This Handler
 pub struct WebHandler {
