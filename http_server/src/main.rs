@@ -20,9 +20,12 @@ fn main() {
     let public_path = env::var(PUBLIC_PATH_VAR).unwrap_or(default_path);
     println!("* Server public path: {}", public_path);
 
+	// Build file reader
+	let file_reader = Arc::new(FileReader::new(&public_path));
+
     // Set handlers
-    let web_handler = WebHandler::new(Box::new(FileReader::new(&public_path)));
-	let counter_handler = RestHandler::starting_at_zero(Box::new(FileReader::new(&public_path)));
+    let web_handler = WebHandler::new(file_reader.clone());
+	let counter_handler = RestHandler::starting_at_zero(file_reader.clone());
     let handlers: Vec<Box<dyn Handler>> = vec![
 		Box::new(web_handler),
 		Box::new(counter_handler),	

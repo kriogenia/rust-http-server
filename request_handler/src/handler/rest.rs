@@ -18,16 +18,16 @@ const VALUE_PARAM: &str = "value";
 /// Handles all the request directed to the API under /api.
 /// This handle responds to the requests with JSONs.
 pub struct RestHandler {
-    fs: Box<FileReader>,
+    fs: Arc<FileReader>,
     counter: Arc<Mutex<Counter>>,
 }
 
 impl RestHandler {
-    pub fn starting_at_zero(fs: Box<FileReader>) -> Self {
+    pub fn starting_at_zero(fs: Arc<FileReader>) -> Self {
         RestHandler::new(fs, Arc::new(Mutex::new(Counter::new())))
     }
 
-    fn new(fs: Box<FileReader>, counter: Arc<Mutex<Counter>>) -> Self {
+    fn new(fs: Arc<FileReader>, counter: Arc<Mutex<Counter>>) -> Self {
         Self { fs, counter }
     }
 

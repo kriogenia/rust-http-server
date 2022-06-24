@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use super::Handler;
 use file_system::FileReader;
 use crate::http::{Header, Method, Request, Response, StatusCode};
@@ -5,11 +7,11 @@ use crate::http::{Header, Method, Request, Response, StatusCode};
 /// Handler in charge of serving all the web resources and endpoints.
 /// This Handler
 pub struct WebHandler {
-    fs: Box<FileReader>,
+    fs: Arc<FileReader>,
 }
 
 impl WebHandler {
-    pub fn new(fs: Box<FileReader>) -> Self {
+    pub fn new(fs: Arc<FileReader>) -> Self {
         Self { fs }
     }
 
