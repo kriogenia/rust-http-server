@@ -1,0 +1,9 @@
+[package]
+name = "http_server"
+authors = [ "SotoEstevez <ricardo@sotoestevez.dev>" ]
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+file_system = { version = "0.1", path = "../file_system" }
+request_handler = { version = "0.1", path = "../request_handler"}
