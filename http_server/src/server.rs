@@ -1,36 +1,47 @@
-use request_handler::handlers::Handler;
+use request_handler::handlers::{Handler, WebHandler};
 use request_handler::http::{HttpError, Request};
 use std::io::Read;
 use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::sync::Arc;
+use std::thread::{self, sleep};
+use std::time::Duration;
 
 const BUFFER_SIZE: usize = 1024;
 
 /// A Server deployable in the given address
-pub struct Server {
-    address: String,
+pub struct Server<'a> {
+    address: &'a str,
 }
 
-impl Server {
+impl<'a> Server<'a> {
     /// Builds a new server able to run in the given address
-    pub fn new(address: String) -> Self {
+    pub fn new(address: &'a str) -> Self {
         Self { address }
     }
 
     /// Runs the server with the provided request handler
-    pub fn run(self, handler: impl Handler) {
-        let listener = TcpListener::bind(&self.address).unwrap();
+    pub fn run(self, handler: WebHandler) {
+        let listener = TcpListener::bind(&self.address).expect("[Unable to bind port]");
         println!("* Listening on http://{}", self.address);
 
+        let handler = Arc::new(handler);
         loop {
             match listener.accept() {
-                Ok(request) => handle_request(request, &handler),
+                Ok(request) => {
+                    let handler = handler.clone();
+                    thread::spawn(move || {
+                        println!("** Thread spawned to attend request");
+                        handle_request(request, handler);
+                        println!("** Request handled, closing thread")
+                    });
+                }
                 Err(_) => continue,
             }
         }
     }
 }
 
-fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: &impl Handler) {
+fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: Arc<impl Handler>) {
     println!("\n> Connection received from {}", address);
 
     let mut buffer = [0; BUFFER_SIZE];
