@@ -1,4 +1,4 @@
-use crate::handlers::Handler;
+use crate::handler::Handler;
 use crate::http::{Request, Response};
 
 /// Composite handler to allow the use of multiple Handlers.

@@ -3,7 +3,7 @@ use prelude::*;
 use std::{env, sync::Arc};
 
 use file_system::fs::FileReader;
-use request_handler::handlers::{root::RootHandler, web::WebHandler, Handler};
+use request_handler::handler::{root::RootHandler, web::WebHandler, Handler, rest::RestHandler};
 use server::Server;
 
 mod prelude;
@@ -22,7 +22,11 @@ fn main() {
 
     // Set handlers
     let web_handler = WebHandler::new(Box::new(FileReader::new(&public_path)));
-    let handlers: Vec<Box<dyn Handler>> = vec![Box::new(web_handler)];
+	let counter_handler = RestHandler::starting_at_zero(Box::new(FileReader::new(&public_path)));
+    let handlers: Vec<Box<dyn Handler>> = vec![
+		Box::new(web_handler),
+		Box::new(counter_handler),	
+	];
     let root_handler = RootHandler::new(handlers);
 
     // Launch server

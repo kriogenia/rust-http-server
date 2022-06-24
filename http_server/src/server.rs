@@ -1,4 +1,4 @@
-use request_handler::handlers::Handler;
+use request_handler::handler::Handler;
 use request_handler::http::{HttpError, Request};
 use std::io::Read;
 use std::net::{SocketAddr, TcpListener, TcpStream};

@@ -1,3 +1,7 @@
+pub mod rest;
+pub mod root;
+pub mod web;
+
 use crate::http::{HttpError, Request, Response, StatusCode};
 
 /// Receives and handles HTTP requests. It can return a Response if it contains the logic
