@@ -3,7 +3,7 @@ mod server;
 use std::env;
 
 use file_system::fs::FileReader;
-use request_handler::handlers::{MultiHandler, WebHandler};
+use request_handler::handlers::{root::RootHandler, web::{WebHandler, self}};
 use server::Server;
 
 const ADDRESS_VAR: &str = "RUST_SERVER_ADDRESS";
@@ -25,14 +25,12 @@ fn main() {
     println!("* Server public path: {}", public_path);
 
     // Set handlers
-    //let mut root_handler = MultiHandler::new();
-    //root_handler.add(Box::new(WebHandler::new(Box::new(FileReader::new(
-    //    &public_path,
-    //)))));
-    let root_handler = WebHandler::new(Box::new(FileReader::new(&public_path)));
+    let web_handler = WebHandler::new(Box::new(FileReader::new(&public_path)));
+    //let handlers = vec![Box::new(web_handler)];
+    //let mut root_handler = RootHandler::new(handlers);
 
     // Launch server
     let address = format!("{}:{}", address, port);
     let server = Server::new(&address);
-    server.run(root_handler);
+    server.run(Box::new(web_handler));
 }

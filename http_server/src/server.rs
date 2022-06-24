@@ -1,10 +1,9 @@
-use request_handler::handlers::{Handler, WebHandler};
+use request_handler::handlers::Handler;
 use request_handler::http::{HttpError, Request};
 use std::io::Read;
 use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::sync::Arc;
-use std::thread::{self, sleep};
-use std::time::Duration;
+use std::thread;
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -20,7 +19,10 @@ impl<'a> Server<'a> {
     }
 
     /// Runs the server with the provided request handler
-    pub fn run(self, handler: WebHandler) {
+    pub fn run<H>(self, handler: Box<H>)
+    where
+        H: Handler + Send + Sync + 'static,
+    {
         let listener = TcpListener::bind(&self.address).expect("[Unable to bind port]");
         println!("* Listening on http://{}", self.address);
 
@@ -41,7 +43,10 @@ impl<'a> Server<'a> {
     }
 }
 
-fn handle_request((mut stream, address): (TcpStream, SocketAddr), handler: Arc<impl Handler>) {
+fn handle_request<H>((mut stream, address): (TcpStream, SocketAddr), handler: Arc<Box<H>>)
+where
+    H: Handler + Send + Sync,
+{
     println!("\n> Connection received from {}", address);
 
     let mut buffer = [0; BUFFER_SIZE];
